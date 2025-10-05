@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.UI;
 using UnityEngine.SceneManagement;
+using TMPro;
 
 public class UIManager : MonoBehaviour
 {
@@ -9,13 +10,13 @@ public class UIManager : MonoBehaviour
     public Button playButton;
     public Button settingsButton;
     public Button quitButton;
-    public Dropdown playerCountDropdown;
+    public TMP_Dropdown playerCountDropdown;
     
     [Header("Game UI")]
     public GameObject gameUIPanel;
     public Button pauseButton;
-    public Text scoreText;
-    public Text timerText;
+    public TextMeshProUGUI scoreText;
+    public TextMeshProUGUI timerText;
     
     [Header("Pause Menu")]
     public GameObject pausePanel;
@@ -242,7 +243,7 @@ public class UIManager : MonoBehaviour
         if (winScreen != null)
         {
             winScreen.SetActive(true);
-            Text winnerText = winScreen.GetComponentInChildren<Text>();
+            TextMeshProUGUI winnerText = winScreen.GetComponentInChildren<TextMeshProUGUI>();
             if (winnerText != null)
                 winnerText.text = "Player " + (winnerPlayer + 1).ToString() + " Wins!";
         }
