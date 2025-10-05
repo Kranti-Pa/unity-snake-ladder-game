@@ -177,11 +177,11 @@ public class UIManager : MonoBehaviour
     
     public void QuitGame()
     {
-        #if UNITY_EDITOR
-            UnityEditor.EditorApplication.isPlaying = false;
-        #else
-            Application.Quit();
-        #endif
+#if UNITY_EDITOR
+        UnityEditor.EditorApplication.isPlaying = false;
+#else
+        Application.Quit();
+#endif
     }
     
     public void SetMusicVolume(float volume)
@@ -209,7 +209,7 @@ public class UIManager : MonoBehaviour
     public void UpdateScore(int currentPlayer, int position)
     {
         if (scoreText != null)
-            scoreText.text = $"Player {currentPlayer + 1}: Position {position}";
+            scoreText.text = "Player " + (currentPlayer + 1).ToString() + ": Position " + position.ToString();
     }
     
     void SaveSettings()
@@ -244,7 +244,7 @@ public class UIManager : MonoBehaviour
             winScreen.SetActive(true);
             Text winnerText = winScreen.GetComponentInChildren<Text>();
             if (winnerText != null)
-                winnerText.text = $"Player {winnerPlayer + 1} Wins!";
+                winnerText.text = "Player " + (winnerPlayer + 1).ToString() + " Wins!";
         }
     }
 }
