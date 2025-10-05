@@ -44,14 +44,14 @@ public class UIManager : MonoBehaviour
     
     void Update()
     {
-        if (!isPaused && gameUIPanel.activeInHierarchy)
+        if (!isPaused && gameUIPanel != null && gameUIPanel.activeInHierarchy)
         {
             gameTimer += Time.deltaTime;
             UpdateTimer();
         }
         
         // Handle pause input
-        if (Input.GetKeyDown(KeyCode.Escape) && gameUIPanel.activeInHierarchy)
+        if (Input.GetKeyDown(KeyCode.Escape) && gameUIPanel != null && gameUIPanel.activeInHierarchy)
         {
             if (isPaused)
                 ResumeGame();
@@ -63,22 +63,32 @@ public class UIManager : MonoBehaviour
     void InitializeUI()
     {
         // Main Menu buttons
-        playButton.onClick.AddListener(StartGame);
-        settingsButton.onClick.AddListener(OpenSettings);
-        quitButton.onClick.AddListener(QuitGame);
+        if (playButton != null)
+            playButton.onClick.AddListener(StartGame);
+        if (settingsButton != null)
+            settingsButton.onClick.AddListener(OpenSettings);
+        if (quitButton != null)
+            quitButton.onClick.AddListener(QuitGame);
         
         // Game UI buttons
-        pauseButton.onClick.AddListener(PauseGame);
+        if (pauseButton != null)
+            pauseButton.onClick.AddListener(PauseGame);
         
         // Pause Menu buttons
-        resumeButton.onClick.AddListener(ResumeGame);
-        mainMenuButton.onClick.AddListener(GoToMainMenu);
-        restartButton.onClick.AddListener(RestartGame);
+        if (resumeButton != null)
+            resumeButton.onClick.AddListener(ResumeGame);
+        if (mainMenuButton != null)
+            mainMenuButton.onClick.AddListener(GoToMainMenu);
+        if (restartButton != null)
+            restartButton.onClick.AddListener(RestartGame);
         
         // Settings buttons
-        backButton.onClick.AddListener(CloseSettings);
-        musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
-        sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
+        if (backButton != null)
+            backButton.onClick.AddListener(CloseSettings);
+        if (musicVolumeSlider != null)
+            musicVolumeSlider.onValueChanged.AddListener(SetMusicVolume);
+        if (sfxVolumeSlider != null)
+            sfxVolumeSlider.onValueChanged.AddListener(SetSFXVolume);
         
         // Initialize panels
         ShowMainMenu();
@@ -86,7 +96,9 @@ public class UIManager : MonoBehaviour
     
     public void StartGame()
     {
-        int playerCount = playerCountDropdown.value + 2; // 2-4 players
+        int playerCount = 2; // Default value
+        if (playerCountDropdown != null)
+            playerCount = playerCountDropdown.value + 2; // 2-4 players
         
         // Pass player count to GameManager
         GameManager gameManager = FindObjectOfType<GameManager>();
@@ -95,8 +107,10 @@ public class UIManager : MonoBehaviour
             gameManager.numberOfPlayers = playerCount;
         }
         
-        mainMenuPanel.SetActive(false);
-        gameUIPanel.SetActive(true);
+        if (mainMenuPanel != null)
+            mainMenuPanel.SetActive(false);
+        if (gameUIPanel != null)
+            gameUIPanel.SetActive(true);
         gameTimer = 0f;
         
         // Start background music
@@ -108,14 +122,16 @@ public class UIManager : MonoBehaviour
     {
         isPaused = true;
         Time.timeScale = 0f;
-        pausePanel.SetActive(true);
+        if (pausePanel != null)
+            pausePanel.SetActive(true);
     }
     
     public void ResumeGame()
     {
         isPaused = false;
         Time.timeScale = 1f;
-        pausePanel.SetActive(false);
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
     }
     
     public void RestartGame()
@@ -132,22 +148,30 @@ public class UIManager : MonoBehaviour
     
     public void ShowMainMenu()
     {
-        mainMenuPanel.SetActive(true);
-        gameUIPanel.SetActive(false);
-        pausePanel.SetActive(false);
-        settingsPanel.SetActive(false);
+        if (mainMenuPanel != null)
+            mainMenuPanel.SetActive(true);
+        if (gameUIPanel != null)
+            gameUIPanel.SetActive(false);
+        if (pausePanel != null)
+            pausePanel.SetActive(false);
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
     }
     
     public void OpenSettings()
     {
-        settingsPanel.SetActive(true);
-        mainMenuPanel.SetActive(false);
+        if (settingsPanel != null)
+            settingsPanel.SetActive(true);
+        if (mainMenuPanel != null)
+            mainMenuPanel.SetActive(false);
     }
     
     public void CloseSettings()
     {
-        settingsPanel.SetActive(false);
-        mainMenuPanel.SetActive(true);
+        if (settingsPanel != null)
+            settingsPanel.SetActive(false);
+        if (mainMenuPanel != null)
+            mainMenuPanel.SetActive(true);
         SaveSettings();
     }
     
@@ -174,20 +198,26 @@ public class UIManager : MonoBehaviour
     
     void UpdateTimer()
     {
-        int minutes = Mathf.FloorToInt(gameTimer / 60f);
-        int seconds = Mathf.FloorToInt(gameTimer % 60f);
-        timerText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
+        if (timerText != null)
+        {
+            int minutes = Mathf.FloorToInt(gameTimer / 60f);
+            int seconds = Mathf.FloorToInt(gameTimer % 60f);
+            timerText.text = string.Format("Time: {0:00}:{1:00}", minutes, seconds);
+        }
     }
     
     public void UpdateScore(int currentPlayer, int position)
     {
-        scoreText.text = $"Player {currentPlayer + 1}: Position {position}";
+        if (scoreText != null)
+            scoreText.text = $"Player {currentPlayer + 1}: Position {position}";
     }
     
     void SaveSettings()
     {
-        PlayerPrefs.SetFloat("MusicVolume", musicVolumeSlider.value);
-        PlayerPrefs.SetFloat("SFXVolume", sfxVolumeSlider.value);
+        if (musicVolumeSlider != null)
+            PlayerPrefs.SetFloat("MusicVolume", musicVolumeSlider.value);
+        if (sfxVolumeSlider != null)
+            PlayerPrefs.SetFloat("SFXVolume", sfxVolumeSlider.value);
         PlayerPrefs.Save();
     }
     
@@ -196,8 +226,10 @@ public class UIManager : MonoBehaviour
         float musicVolume = PlayerPrefs.GetFloat("MusicVolume", 0.7f);
         float sfxVolume = PlayerPrefs.GetFloat("SFXVolume", 0.8f);
         
-        musicVolumeSlider.value = musicVolume;
-        sfxVolumeSlider.value = sfxVolume;
+        if (musicVolumeSlider != null)
+            musicVolumeSlider.value = musicVolume;
+        if (sfxVolumeSlider != null)
+            sfxVolumeSlider.value = sfxVolume;
         
         SetMusicVolume(musicVolume);
         SetSFXVolume(sfxVolume);
