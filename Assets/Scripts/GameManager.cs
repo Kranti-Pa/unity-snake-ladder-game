@@ -2,6 +2,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 
 public class GameManager : MonoBehaviour
 {
@@ -11,11 +12,11 @@ public class GameManager : MonoBehaviour
     
     [Header("UI References")]
     public Button rollDiceButton;
-    public Text diceResultText;
-    public Text currentPlayerText;
-    public Text gameStatusText;
+    public TextMeshProUGUI diceResultText;
+    public TextMeshProUGUI currentPlayerText;
+    public TextMeshProUGUI gameStatusText;
     public GameObject winPanel;
-    public Text winnerText;
+    public TextMeshProUGUI winnerText;
     
     [Header("Game Objects")]
     public GameObject[] playerPieces;
