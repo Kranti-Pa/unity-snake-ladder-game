@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class PlayerController : MonoBehaviour
 {
@@ -80,7 +81,7 @@ public class PlayerController : MonoBehaviour
         }
     }
     
-    System.Collections.IEnumerator BounceAnimation()
+    IEnumerator BounceAnimation()
     {
         float duration = 0.3f;
         float elapsed = 0f;
@@ -117,7 +118,7 @@ public class PlayerController : MonoBehaviour
         StartCoroutine(CelebrationAnimation());
     }
     
-    System.Collections.IEnumerator CelebrationAnimation()
+    IEnumerator CelebrationAnimation()
     {
         float duration = 2f;
         float elapsed = 0f;
