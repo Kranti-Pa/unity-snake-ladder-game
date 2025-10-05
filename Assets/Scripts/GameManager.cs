@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 using System.Collections.Generic;
 
 public class GameManager : MonoBehaviour
@@ -51,26 +52,48 @@ public class GameManager : MonoBehaviour
         for (int i = 0; i < numberOfPlayers; i++)
         {
             playerPositions[i] = 0;
-            playerPieces[i].transform.position = boardPositions[0].position;
+            if (playerPieces != null && playerPieces.Length > i && playerPieces[i] != null)
+            {
+                if (boardPositions != null && boardPositions.Length > 0 && boardPositions[0] != null)
+                {
+                    playerPieces[i].transform.position = boardPositions[0].position;
+                }
+            }
         }
         
-        rollDiceButton.onClick.AddListener(RollDice);
+        if (rollDiceButton != null)
+            rollDiceButton.onClick.AddListener(RollDice);
+        
         UpdateUI();
-        winPanel.SetActive(false);
+        
+        if (winPanel != null)
+            winPanel.SetActive(false);
     }
     
     public void RollDice()
     {
         if (gameEnded) return;
         
-        rollDiceButton.interactable = false;
-        int diceValue = diceController.RollDice();
-        diceResultText.text = "Dice: " + diceValue;
+        if (rollDiceButton != null)
+            rollDiceButton.interactable = false;
+            
+        int diceValue = 0;
+        if (diceController != null)
+        {
+            diceValue = diceController.RollDice();
+        }
+        else
+        {
+            diceValue = Random.Range(1, 7);
+        }
+        
+        if (diceResultText != null)
+            diceResultText.text = "Dice: " + diceValue;
         
         StartCoroutine(MovePlayer(diceValue));
     }
     
-    System.Collections.IEnumerator MovePlayer(int steps)
+    IEnumerator MovePlayer(int steps)
     {
         int newPosition = playerPositions[currentPlayer] + steps;
         
@@ -88,7 +111,8 @@ public class GameManager : MonoBehaviour
         // Check for snakes and ladders
         if (snakes.ContainsKey(newPosition))
         {
-            gameStatusText.text = "Snake bite! Going down...";
+            if (gameStatusText != null)
+                gameStatusText.text = "Snake bite! Going down...";
             yield return new WaitForSeconds(1f);
             newPosition = snakes[newPosition];
             yield return StartCoroutine(AnimatePlayerMovement(currentPlayer, newPosition));
@@ -96,7 +120,8 @@ public class GameManager : MonoBehaviour
         }
         else if (ladders.ContainsKey(newPosition))
         {
-            gameStatusText.text = "Ladder climb! Going up...";
+            if (gameStatusText != null)
+                gameStatusText.text = "Ladder climb! Going up...";
             yield return new WaitForSeconds(1f);
             newPosition = ladders[newPosition];
             yield return StartCoroutine(AnimatePlayerMovement(currentPlayer, newPosition));
@@ -113,11 +138,19 @@ public class GameManager : MonoBehaviour
         // Switch to next player
         currentPlayer = (currentPlayer + 1) % numberOfPlayers;
         UpdateUI();
-        rollDiceButton.interactable = true;
+        
+        if (rollDiceButton != null)
+            rollDiceButton.interactable = true;
     }
     
-    System.Collections.IEnumerator AnimatePlayerMovement(int playerIndex, int targetPosition)
+    IEnumerator AnimatePlayerMovement(int playerIndex, int targetPosition)
     {
+        if (playerPieces == null || playerPieces.Length <= playerIndex || playerPieces[playerIndex] == null)
+            yield break;
+            
+        if (boardPositions == null || boardPositions.Length <= targetPosition || boardPositions[targetPosition] == null)
+            yield break;
+        
         Vector3 startPos = playerPieces[playerIndex].transform.position;
         Vector3 targetPos = boardPositions[targetPosition].position;
         
@@ -137,16 +170,25 @@ public class GameManager : MonoBehaviour
     
     void UpdateUI()
     {
-        currentPlayerText.text = "Player " + (currentPlayer + 1) + "'s Turn";
-        gameStatusText.text = "Roll the dice!";
+        if (currentPlayerText != null)
+            currentPlayerText.text = "Player " + (currentPlayer + 1) + "'s Turn";
+            
+        if (gameStatusText != null)
+            gameStatusText.text = "Roll the dice!";
     }
     
     void EndGame()
     {
         gameEnded = true;
-        winPanel.SetActive(true);
-        winnerText.text = "Player " + (currentPlayer + 1) + " Wins!";
-        rollDiceButton.interactable = false;
+        
+        if (winPanel != null)
+            winPanel.SetActive(true);
+            
+        if (winnerText != null)
+            winnerText.text = "Player " + (currentPlayer + 1) + " Wins!";
+            
+        if (rollDiceButton != null)
+            rollDiceButton.interactable = false;
     }
     
     public void RestartGame()
