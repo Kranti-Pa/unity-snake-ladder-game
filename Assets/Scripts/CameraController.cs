@@ -1,4 +1,5 @@
 using UnityEngine;
+using System.Collections;
 
 public class CameraController : MonoBehaviour
 {
@@ -54,7 +55,7 @@ public class CameraController : MonoBehaviour
         }
         
         // Right mouse button for camera rotation
-        if (Input.GetMouseButton(1))
+        if (Input.GetMouseButton(1) && boardCenter != null)
         {
             float mouseX = Input.GetAxis("Mouse X") * rotationSpeed;
             float mouseY = Input.GetAxis("Mouse Y") * rotationSpeed;
@@ -87,6 +88,8 @@ public class CameraController : MonoBehaviour
     
     void ZoomCamera(float zoomAmount)
     {
+        if (cam == null) return;
+        
         if (cam.orthographic)
         {
             cam.orthographicSize = Mathf.Clamp(cam.orthographicSize + zoomAmount, minZoom, maxZoom);
@@ -112,7 +115,7 @@ public class CameraController : MonoBehaviour
         transform.LookAt(boardPosition);
         
         // Adjust camera settings for board view
-        if (cam.orthographic)
+        if (cam != null && cam.orthographic)
         {
             cam.orthographicSize = 8f;
         }
@@ -129,7 +132,7 @@ public class CameraController : MonoBehaviour
         transform.position = initialPosition;
         transform.rotation = initialRotation;
         
-        if (cam.orthographic)
+        if (cam != null && cam.orthographic)
         {
             cam.orthographicSize = 10f;
         }
@@ -139,6 +142,8 @@ public class CameraController : MonoBehaviour
     
     public void SetCameraMode(bool orthographic)
     {
+        if (cam == null) return;
+        
         cam.orthographic = orthographic;
         
         if (orthographic)
@@ -156,7 +161,7 @@ public class CameraController : MonoBehaviour
         StartCoroutine(SmoothTransition(targetPosition, targetRotation, duration));
     }
     
-    System.Collections.IEnumerator SmoothTransition(Vector3 targetPos, Quaternion targetRot, float duration)
+    IEnumerator SmoothTransition(Vector3 targetPos, Quaternion targetRot, float duration)
     {
         Vector3 startPos = transform.position;
         Quaternion startRot = transform.rotation;
