@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System.Collections;
 
 public class DiceController : MonoBehaviour
 {
@@ -28,7 +29,7 @@ public class DiceController : MonoBehaviour
         return result;
     }
     
-    System.Collections.IEnumerator AnimateDiceRoll(int finalResult)
+    IEnumerator AnimateDiceRoll(int finalResult)
     {
         isRolling = true;
         
@@ -41,15 +42,22 @@ public class DiceController : MonoBehaviour
         // Animate dice rolling
         while (elapsed < rollDuration)
         {
-            int randomFace = Random.Range(0, 6);
-            diceImage.sprite = diceSprites[randomFace];
+            if (diceSprites != null && diceSprites.Length >= 6 && diceImage != null)
+            {
+                int randomFace = Random.Range(0, 6);
+                diceImage.sprite = diceSprites[randomFace];
+            }
             
             elapsed += Time.deltaTime;
             yield return new WaitForSeconds(0.1f);
         }
         
         // Show final result
-        diceImage.sprite = diceSprites[finalResult - 1];
+        if (diceSprites != null && diceSprites.Length >= finalResult && diceImage != null)
+        {
+            diceImage.sprite = diceSprites[finalResult - 1];
+        }
+        
         isRolling = false;
     }
     
